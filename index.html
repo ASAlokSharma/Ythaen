@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ythaen</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
@@ -233,49 +234,127 @@
       opacity:0; animation:fadeIn 1.2s 1s forwards;
     }
 
+    /* ══════════════════════════════════════
+       CINEMATIC ORB
+    ══════════════════════════════════════ */
     .orb {
-      width:min(320px,75vw); height:min(320px,75vw); border-radius:50%;
-      background:radial-gradient(circle,rgba(0,210,255,0.1),transparent 70%);
-      border:1px solid rgba(0,210,255,0.1);
-      display:flex; align-items:center; justify-content:center;
-      position:relative; animation:orbPulse 5s ease-in-out infinite;
-    }
-    .orb::before {
-      content:''; position:absolute;
-      width:calc(100% + 48px); height:calc(100% + 48px);
-      border-radius:50%; border:1px solid rgba(0,210,255,0.05);
-    }
-    .orb-core {
-      width:54%; height:54%; border-radius:50%;
-      background:radial-gradient(circle,rgba(0,210,255,0.16),transparent 70%);
-      border:1px solid rgba(0,210,255,0.18);
+      width:min(340px,80vw); height:min(340px,80vw); border-radius:50%;
       display:flex; align-items:center; justify-content:center;
       position:relative;
     }
-    
-    /* Ripple Effect */
-    .orb-core::before, .orb-core::after {
-      content: ''; position: absolute; inset: 0;
-      border-radius: 50%; border: 1px solid var(--acc);
-      opacity: 0; pointer-events: none;
-      animation: ripple 3s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-    }
-    .orb-core::after { animation-delay: 1.5s; }
 
-    /* Logo Pop-in */
-    .orb-logo { 
-      width:64%; object-fit:contain; position:relative; z-index:1;
-      opacity: 0; animation: logoPop 0.8s 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    /* Outermost slow-rotating dashed ring with glowing dots */
+    .orb-ring-outer {
+      position:absolute;
+      width:calc(100% + 80px); height:calc(100% + 80px);
+      border-radius:50%;
+      border:1px dashed rgba(0,210,255,0.2);
+      animation:rotateCW 18s linear infinite;
+    }
+    .orb-ring-outer::before, .orb-ring-outer::after {
+      content:''; position:absolute;
+      width:7px; height:7px; border-radius:50%;
+      background:var(--acc); box-shadow:0 0 8px var(--acc), 0 0 18px var(--acc);
+    }
+    .orb-ring-outer::before { top:-3.5px; left:50%; transform:translateX(-50%); }
+    .orb-ring-outer::after  { bottom:-3.5px; left:50%; transform:translateX(-50%); }
+
+    /* Middle counter-rotating ring with dot */
+    .orb-ring-mid {
+      position:absolute;
+      width:calc(100% + 32px); height:calc(100% + 32px);
+      border-radius:50%;
+      border:1px solid rgba(0,210,255,0.1);
+      animation:rotateCCW 10s linear infinite;
+    }
+    .orb-ring-mid::before {
+      content:''; position:absolute;
+      width:5px; height:5px; border-radius:50%;
+      background:var(--acc-l); box-shadow:0 0 8px var(--acc-l), 0 0 14px var(--acc-l);
+      top:50%; right:-2.5px; transform:translateY(-50%);
     }
 
-    /* Keyframes for Ripple and Pop */
-    @keyframes ripple {
-      0%   { transform: scale(0.8); opacity: 0.6; border-width: 2px; }
-      100% { transform: scale(2.2); opacity: 0; border-width: 0px; }
+    /* Main glowing orb body */
+    .orb-body {
+      width:100%; height:100%; border-radius:50%;
+      background:radial-gradient(circle at 40% 35%,
+        rgba(0,210,255,0.18) 0%,
+        rgba(0,210,255,0.07) 45%,
+        transparent 70%);
+      border:1px solid rgba(0,210,255,0.14);
+      box-shadow:
+        0 0 50px rgba(0,210,255,0.12),
+        0 0 100px rgba(0,210,255,0.06),
+        inset 0 0 50px rgba(0,210,255,0.05);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; animation:orbPulse 5s ease-in-out infinite;
+    }
+
+    /* Two expanding ripples from body */
+    .orb-body::before, .orb-body::after {
+      content:''; position:absolute; inset:0;
+      border-radius:50%; border:1.5px solid rgba(0,210,255,0.45);
+      opacity:0; pointer-events:none;
+      animation:rippleCinema 3.5s cubic-bezier(0.2,0.8,0.4,1) infinite;
+    }
+    .orb-body::after { animation-delay:1.75s; }
+
+    .orb-core {
+      width:52%; height:52%; border-radius:50%;
+      background:radial-gradient(circle at 38% 32%,
+        rgba(0,210,255,0.3),
+        rgba(0,210,255,0.1) 50%,
+        transparent 70%);
+      border:1px solid rgba(0,210,255,0.28);
+      box-shadow:
+        0 0 24px rgba(0,210,255,0.22),
+        inset 0 0 22px rgba(0,210,255,0.12);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; animation:corePulse 3s ease-in-out infinite;
+    }
+
+    /* Third ripple from core */
+    .orb-core::before {
+      content:''; position:absolute; inset:0;
+      border-radius:50%; border:1px solid rgba(122,234,255,0.35);
+      opacity:0; pointer-events:none;
+      animation:rippleCinema 3.5s cubic-bezier(0.2,0.8,0.4,1) 0.88s infinite;
+    }
+
+    /* Logo with glow */
+    .orb-logo {
+      width:62%; object-fit:contain; position:relative; z-index:1;
+      filter:drop-shadow(0 0 10px rgba(0,210,255,0.65)) drop-shadow(0 0 26px rgba(0,210,255,0.3));
+      opacity:0; animation:logoPop 0.8s 1.2s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+    }
+
+    /* Floating particles */
+    .orb-particles { position:absolute; inset:-40px; pointer-events:none; }
+    .particle {
+      position:absolute; border-radius:50%;
+      background:var(--acc); box-shadow:0 0 5px var(--acc);
+      animation:floatParticle var(--dur) ease-in-out var(--delay) infinite;
+    }
+
+    @keyframes rotateCW  { from{transform:rotate(0deg)}   to{transform:rotate(360deg)} }
+    @keyframes rotateCCW { from{transform:rotate(0deg)}   to{transform:rotate(-360deg)} }
+    @keyframes rippleCinema {
+      0%   { transform:scale(0.85); opacity:0.65; }
+      100% { transform:scale(2.7);  opacity:0; }
+    }
+    @keyframes corePulse {
+      0%,100% { box-shadow:0 0 24px rgba(0,210,255,0.22), inset 0 0 22px rgba(0,210,255,0.12); }
+      50%      { box-shadow:0 0 40px rgba(0,210,255,0.42), inset 0 0 30px rgba(0,210,255,0.22); }
     }
     @keyframes logoPop {
-      0%   { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      0%   { transform:scale(0.5); opacity:0; }
+      100% { transform:scale(1);   opacity:1; }
+    }
+    @keyframes floatParticle {
+      0%,100% { transform:translate(0,0); opacity:0; }
+      20%     { opacity:0.9; }
+      80%     { opacity:0.5; }
+      50%     { transform:translate(var(--tx),var(--ty)); opacity:0.8; }
     }
 
     .hero-stats { display:flex; gap:28px; flex-wrap:wrap; justify-content:center; }
@@ -292,11 +371,23 @@
 
     .scroll-hint {
       position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
-      display:flex; flex-direction:column; align-items:center; gap:8px;
-      opacity:0; animation:fadeIn 1s 2s forwards;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      opacity:0; animation:fadeIn 1s 2s forwards; cursor:pointer;
     }
-    .scroll-hint span { font-size:0.57rem; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:var(--muted); }
-    .scroll-line { width:1px; height:42px; background:linear-gradient(to bottom,var(--acc),transparent); animation:scrollA 2s ease-in-out infinite; }
+    .scroll-hint span { font-size:0.57rem; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:var(--muted); transition:color 0.25s; }
+    .scroll-hint:hover span { color:var(--acc); }
+    .scroll-chevrons { display:flex; flex-direction:column; align-items:center; gap:0; }
+    .scroll-chevrons i {
+      font-size:0.75rem; color:var(--acc); display:block;
+      animation:chevronDrop 1.6s ease-in-out infinite;
+    }
+    .scroll-chevrons i:nth-child(1) { opacity:0.3; animation-delay:0s; }
+    .scroll-chevrons i:nth-child(2) { opacity:0.6; animation-delay:0.2s; }
+    .scroll-chevrons i:nth-child(3) { opacity:1;   animation-delay:0.4s; }
+    @keyframes chevronDrop {
+      0%,100% { transform:translateY(-3px); }
+      50%      { transform:translateY(3px); }
+    }
 
     /* ══════════════════════════════════════
        MARQUEE
@@ -658,7 +749,6 @@
     @keyframes fadeUp    { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:none} }
     @keyframes fadeIn    { from{opacity:0} to{opacity:1} }
     @keyframes orbPulse  { 0%,100%{box-shadow:0 0 50px rgba(0,210,255,0.07)} 50%{box-shadow:0 0 90px rgba(0,210,255,0.14)} }
-    @keyframes scrollA   { 0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom} }
     @keyframes marquee   { from{transform:translateX(0)} to{transform:translateX(-50%)} }
     @keyframes blink     { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
@@ -710,7 +800,7 @@
        RESPONSIVE — SMALL ≤480
     ══════════════════════════════════════ */
     @media (max-width:480px) {
-      .orb { width:220px; height:220px; }
+      .orb { width:240px; height:240px; }
       .hero-btns { flex-direction:column; align-items:stretch; }
       .btn-fill, .btn-out { justify-content:center; }
       .hero-stats { gap:20px; }
@@ -761,6 +851,7 @@
 
     <div class="nav-right">
       <a href="https://github.com/ASAlokSharma" target="_blank" class="nav-icon" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://linkedin.com/in/ASAlokSharma/" target="_blank" class="nav-icon" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
       <a href="#contact" class="nav-cta sm"><i class="fa-solid fa-envelope"></i><span class="ct">Connect</span></a>
       <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
@@ -786,13 +877,18 @@
 
       <div class="hero-visual">
         <div class="orb">
-          <div class="orb-core">
-            <img src="logo.png" alt="Ythaen" class="orb-logo">
+          <div class="orb-ring-outer"></div>
+          <div class="orb-ring-mid"></div>
+          <div class="orb-body">
+            <div class="orb-core">
+              <img src="logo.png" alt="Ythaen" class="orb-logo">
+            </div>
           </div>
+          <div class="orb-particles" id="orbParticles"></div>
         </div>
         <div class="hero-stats">
           <div class="stat">
-            <div class="stat-n"><span data-count="2">0</span></div>
+            <div class="stat-n"><span id="projectCount">0</span></div>
             <div class="stat-l">Projects</div>
           </div>
           <div class="stat">
@@ -808,9 +904,13 @@
 
     </div>
   </div>
-  <div class="scroll-hint">
+  <div class="scroll-hint" onclick="document.querySelector('#projects') && window.scrollTo({top:document.querySelector('#projects').offsetTop - 72, behavior:'smooth'})">
     <span>Scroll</span>
-    <div class="scroll-line"></div>
+    <div class="scroll-chevrons">
+      <i class="fa-solid fa-chevron-down"></i>
+      <i class="fa-solid fa-chevron-down"></i>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
   </div>
 </section>
 
@@ -852,10 +952,10 @@
         <div class="label">Selected Portfolio</div>
         <h2 class="sec-title">Core <em>Projects</em></h2>
       </div>
-      <div class="sec-sub">02 Works</div>
+      <div class="sec-sub" id="projSubCount">02 Works</div>
     </div>
 
-    <div class="proj-grid">
+    <div class="proj-grid" id="projGrid">
 
       <div class="pcard feat rev d1"
         data-title="Alok Sharma's Portfolio"
@@ -1050,6 +1150,9 @@
         <a href="https://github.com/ASAlokSharma" target="_blank" class="btn-out">
           <i class="fa-brands fa-github"></i> GitHub
         </a>
+        <a href="https://linkedin.com/in/ASAlokSharma/" target="_blank" class="btn-out">
+          <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+        </a>
       </div>
     </div>
   </div>
@@ -1063,6 +1166,7 @@
     </div>
     <div class="foot-soc">
       <a href="https://github.com/ASAlokSharma" target="_blank" class="fsoc" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://linkedin.com/in/ASAlokSharma/" target="_blank" class="fsoc" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
     </div>
   </div>
   <div class="foot-bot">
@@ -1080,6 +1184,29 @@ document.addEventListener('mousemove', e => {
     mg.style.setProperty('--my', e.clientY + 'px');
   });
 });
+
+/* Cinematic orb particles */
+(function spawnParticles() {
+  const container = document.getElementById('orbParticles');
+  if (!container) return;
+  const count = 10;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1.5;
+    const angle = (i / count) * 360;
+    const radius = 42 + Math.random() * 20;
+    const rad = angle * Math.PI / 180;
+    const x = 50 + Math.cos(rad) * radius;
+    const y = 50 + Math.sin(rad) * radius;
+    const tx = (Math.random() - 0.5) * 30 + 'px';
+    const ty = (Math.random() - 0.5) * 30 + 'px';
+    const dur = (3.5 + Math.random() * 3) + 's';
+    const delay = (Math.random() * 4) + 's';
+    p.style.cssText = `width:${size}px;height:${size}px;left:${x}%;top:${y}%;--tx:${tx};--ty:${ty};--dur:${dur};--delay:${delay};`;
+    container.appendChild(p);
+  }
+})();
 
 /* Smooth scroll */
 const navH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navH'));
@@ -1140,15 +1267,48 @@ ham.addEventListener('click', () => {
 const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.08 });
 document.querySelectorAll('.rev,.rev-l,.rev-r').forEach(el => obs.observe(el));
 
-/* Count-up */
+/* ══════════════════════════════════════
+   DYNAMIC PROJECT COUNT
+   Automatically counts .pcard elements
+   in #projGrid — no manual updates needed!
+══════════════════════════════════════ */
+(function updateProjectCount() {
+  const cards = document.querySelectorAll('#projGrid .pcard');
+  const count = cards.length;
+
+  // Update "XX Works" subtitle
+  const sub = document.getElementById('projSubCount');
+  if (sub) sub.textContent = String(count).padStart(2, '0') + ' Works';
+
+  // Update pnum labels inside each card
+  cards.forEach((card, i) => {
+    const pnum = card.querySelector('.pnum');
+    if (pnum) pnum.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(count).padStart(2, '0');
+  });
+
+  // Animate hero project counter
+  const el = document.getElementById('projectCount');
+  if (!el) return;
+  const o2 = new IntersectionObserver((es, ob) => {
+    if (!es[0].isIntersecting) return; ob.disconnect();
+    let n = 0; const step = count / 55;
+    const t = setInterval(() => {
+      n += step;
+      el.textContent = n >= count ? (clearInterval(t), count) : Math.floor(n);
+    }, 16);
+  }, { threshold: 0.5 });
+  o2.observe(el);
+})();
+
+/* Count-up for other stats */
 document.querySelectorAll('.stat-n span[data-count]').forEach(el => {
   const target = +el.dataset.count;
   const o2 = new IntersectionObserver((es, ob) => {
     if (!es[0].isIntersecting) return; ob.disconnect();
     let n = 0; const step = target / 55;
-    const t = setInterval(() => { 
-      n += step; 
-      el.textContent = n >= target ? (clearInterval(t), target) : Math.floor(n); 
+    const t = setInterval(() => {
+      n += step;
+      el.textContent = n >= target ? (clearInterval(t), target) : Math.floor(n);
     }, 16);
   }, { threshold: 0.5 });
   o2.observe(el);
